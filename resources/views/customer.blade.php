@@ -23,6 +23,7 @@
 </head>
 
 <body>
+    <h4><center>Invoice Form</center> </h4>
     <div class="row col-md-12">
         <div class="col-md-3"> </div>
         <div class="col-md-6 mt-4">
@@ -63,14 +64,14 @@
                     <label for="qty" class="col-sm-3 col-form-label">Qty</label>
                     <div class="col-sm-7">
                         <input type="text" class="form-control" id="qty" name="qty" placeholder="qty"
-                            oninput="updateQty()">
+                            oninput="updateQty()" value="0">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="discount" class="col-sm-3 col-form-label">Discount (%)</label>
                     <div class="col-sm-7">
                         <input type="text" class="form-control" id="discount" name="discount" placeholder="discount"
-                            oninput="updateQty()">
+                            oninput="updateQty()" value="0">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -170,44 +171,55 @@
 
         var i = 0;
         $('#add-invoice').click(function() {
+            let checkValidate = validateInvoice();
+            if(checkValidate){            
+                $('#customer_name').val($('#customerName').val());
+                let product_id = $('#product').val();
+                let rate = $('#rate').val();
+                let unit = $('#unit').val();
+                let qty = $('#qty').val();
+                let disc = $('#discount').val();
+                let net_amount = $('#net_amount').val();
+                let total_amount = $('#total_amount').val();
+                var selectval = '';
+                var html = '<tr><td><select class="form-control product-table" id="invoice-product-' + i +
+                    '" name="invoice[' + i + '][product_id]" data-id="' + i + '">';
+                <?php  foreach ($products as $product){ ?>
+                var prId = "{{ $product->product_id }}";
+                if (prId == product_id) {
+                    selectval = 'selected';
+                } else {
+                    selectval = '';
+                }
+                html += `<option value="` + prId + `" ` + selectval +
+                    `> {{ $product->product_name }} </option>`;
+                <?php } ?>
+                html += `</select></td><td><input class="form-control" id="invoice-rate-` + i +
+                    `" name="invoice[` + i + `][rate]" value="` + rate + `" readonly /></td>
+                        <td><input class="form-control"  id="invoice-unit-` + i + `" name="invoice[` + i +
+                    `][unit]" readonly value="` + unit + `" /></td>
+                        <td><input class="form-control qty-disc" id="invoice-qty-` + i + `" name="invoice[` + i +
+                    `][qty]" value="` + qty + `" data-id="` + i + `" /></td>
+                        <td><input class="form-control qty-disc"  id="invoice-disc-` + i + `" name="invoice[` + i +
+                    `][disc]" value="` + disc + `" data-id="` + i + `" /></td>
+                        <td><input class="form-control"  id="invoice-net-` + i + `" name="invoice[` + i +
+                    `][net]" readonly value="` + net_amount + `" /></td>
+                        <td><input class="form-control" id="invoice-total-` + i + `" name="invoice[` + i +
+                    `][total]" readonly value="` + total_amount + `" /></td>
+                        <td><button class="btn btn-danger form-control remove-invoice"> REMOVE </button> </td></tr>`;
+                $('tbody').append(html);
 
-            $('#customer_name').val($('#customerName').val());
-            let product_id = $('#product').val();
-            let rate = $('#rate').val();
-            let unit = $('#unit').val();
-            let qty = $('#qty').val();
-            let disc = $('#discount').val();
-            let net_amount = $('#net_amount').val();
-            let total_amount = $('#total_amount').val();
-            var selectval = '';
-            var html = '<tr><td><select class="form-control product-table" id="invoice-product-' + i +
-                '" name="invoice[' + i + '][product_id]" data-id="' + i + '">';
-            <?php  foreach ($products as $product){ ?>
-            var prId = "{{ $product->product_id }}";
-            if (prId == product_id) {
-                selectval = 'selected';
-            } else {
-                selectval = '';
+                i += 1;
+
+                $('#product').val('');
+                $('#rate').val('');
+                $('#unit').val('');
+                $('#qty').val(0);
+                $('#discount').val(0);
+                $('#net_amount').val('');
+                $('#total_amount').val('');
             }
-            html += `<option value="` + prId + `" ` + selectval +
-                `> {{ $product->product_name }} </option>`;
-            <?php } ?>
-            html += `</select></td><td><input class="form-control" id="invoice-rate-` + i +
-                `" name="invoice[` + i + `][rate]" value="` + rate + `" readonly /></td>
-                    <td><input class="form-control"  id="invoice-unit-` + i + `" name="invoice[` + i +
-                `][unit]" readonly value="` + unit + `" /></td>
-                    <td><input class="form-control qty-disc" id="invoice-qty-` + i + `" name="invoice[` + i +
-                `][qty]" value="` + qty + `" data-id="` + i + `" /></td>
-                    <td><input class="form-control qty-disc"  id="invoice-disc-` + i + `" name="invoice[` + i +
-                `][disc]" value="` + disc + `" data-id="` + i + `" /></td>
-                    <td><input class="form-control"  id="invoice-net-` + i + `" name="invoice[` + i +
-                `][net]" readonly value="` + net_amount + `" /></td>
-                    <td><input class="form-control" id="invoice-total-` + i + `" name="invoice[` + i +
-                `][total]" readonly value="` + total_amount + `" /></td>
-                    <td><button class="btn btn-danger form-control remove-invoice"> REMOVE </button> </td></tr>`;
-            $('tbody').append(html);
 
-            i += 1;
         });
 
         $(document).on('click', '.remove-invoice', function() {
@@ -262,6 +274,7 @@
         });
 
         $(document).on('change', '.qty-disc', function() {
+         
             let id = $(this).data('id');
             let rateTableId = '#invoice-rate-' + id;
             let unitTableId = '#invoice-unit-' + id;
@@ -272,6 +285,21 @@
             
             let rate = $(rateTableId).val();
             let unit = $(unitTableId).val();
+            let qty = $(qtyTableId).val();
+            let discount = $(discTableId).val();
+
+            let unitPerRate = parseFloat(rate) / parseFloat(unit);
+            if (qty != '') {
+                let netAmount = parseFloat(qty) * parseFloat(unitPerRate);
+                $(netTableId).val(netAmount);
+                if (discount != '') {
+                    let totalAmount = netAmount - (netAmount * parseFloat(
+                        discount) / 100);
+                    $(totalTableId).val(totalAmount);
+                } else {
+                    $(totalTableId).val(netAmount);
+                }
+            }
             
         });
 
@@ -291,6 +319,15 @@
                 success: function(res) {
                     if (res.status == 'success') {
                         toastr.success(res.message);
+                        $('tbody').html('');
+                        $('#product').val('');
+                        $('#rate').val('');
+                        $('#unit').val('');
+                        $('#qty').val(0);
+                        $('#discount').val(0);
+                        $('#net_amount').val('');
+                        $('#total_amount').val('');
+
                     }
                     if (res.status == 'error') {
                         toastr.error(res.message);
@@ -324,6 +361,24 @@
                 $('#total_amount').val(netAmount);
             }
         }
+    }
+
+    function validateInvoice() {
+        if($('#customerName').val() == ''){
+            toastr.error('customer name is required!');
+            return false;
+        }
+        if($('#product').val() == ''){
+            toastr.error('Please select product!');
+            return false;
+        }
+        let qty = $('#qty').val();
+        if( qty == '' || qty <= 0){
+            toastr.error('Enter valid Qty!');
+            return false;
+        }
+       
+        return true;
     }
 </script>
 
