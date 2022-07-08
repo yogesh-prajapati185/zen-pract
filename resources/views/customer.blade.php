@@ -178,26 +178,25 @@
             let disc = $('#discount').val();
             let net_amount  =  $('#net_amount').val();
             let total_amount =  $('#total_amount').val();
-
-            $('tbody').append(`
-                <tr>
-                    <td><select class="form-control product-table" id="invoice[`+ i +`][product_id]" name="invoice[`+ i +`][product_id]"">
-                            <option value=""> Please select </option>
-                            @foreach ($products as $product)
-                                <option value="{{ $product->product_id }}"> {{ $product->product_name }} </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input class="form-control" id="invoice[`+ i +`][rate]" name="invoice[`+ i +`][rate]" value="`+rate+`" /></td>
+            var selectval = '';
+            var html = '<tr><td><select class="form-control product-table" id="invoice[`+ i +`][product_id]" name="invoice[`+ i +`][product_id]""><option value=""> Please select </option>';
+            <?php  foreach ($products as $product){ ?>
+                var prId = "{{ $product->product_id }}";
+                if(prId == product_id){
+                    selectval = 'selected';
+                }else{
+                    selectval = '';
+                }
+                html += `<option value="`+prId+`" `+selectval+`> {{ $product->product_name }} </option>`;
+            <?php } ?>
+                html += `</select></td><td><input class="form-control" id="invoice[`+ i +`][rate]" name="invoice[`+ i +`][rate]" value="`+rate+`" /></td>
                     <td><input class="form-control"  id="invoice[`+ i +`][unit]" name="invoice[`+ i +`][unit]" readonly value="`+unit+`" /></td>
                     <td><input class="form-control qty-table" id="invoice[`+ i +`][qty]" name="invoice[`+ i +`][qty]" value="`+qty+`" /></td>
                     <td><input class="form-control disc-table"  id="invoice[`+ i +`][disc]" name="invoice[`+ i +`][disc]" value="`+disc+`" /></td>
                     <td><input class="form-control"  id="invoice[`+ i +`][net]" name="invoice[`+ i +`][net]" readonly value="`+net_amount+`" /></td>
                     <td><input class="form-control" id="invoice[`+ i +`][total]" name="invoice[`+ i +`][total]" readonly value="`+total_amount+`" /></td>
-                    <td><button class="btn btn-danger form-control remove-invoice"> REMOVE </button> </td>
-                </tr>
-            `);
+                    <td><button class="btn btn-danger form-control remove-invoice"> REMOVE </button> </td></tr>`;
+            $('tbody').append(html);
             
             i += 1;
         });
@@ -209,7 +208,6 @@
         $(document).on('change', '.product-table', function(){
             let prodTableId = '#'+$(this).attr('id');
             let rateTableId = prodTableId.replace('product_id','rate');
-            alert(rateTableId);
             let unitTableId = prodTableId.replace('product_id','unit');
             let qtyTableId = prodTableId.replace('product_id','qty');
             let discTableId = prodTableId.replace('product_id','disc');
@@ -227,22 +225,23 @@
                 success: function(data) {
                     if (data.status == 'success') {
                         $(rateTableId).val(data.data.rate);
-                        $(unitTableId).val(data.data.unit);
-                        let rate = data.data.rate;
-                        let unit = data.data.unit;
-                        let qty = $(qtyTableId).val();
-                        let discount = $(discTableId).val();
-                        let unitPerRate = parseFloat(rate) / parseFloat(unit);
-                        if (qty != '') {
-                            let netAmount = parseFloat(qty) * parseFloat(unitPerRate);
-                            $(netTableId).val(netAmount);
-                            if (discount != '') {
-                                let totalAmount = netAmount - (netAmount * parseFloat(discount) / 100);
-                                $(totalTableId).val(totalAmount);
-                            }else{
-                                $(totalTableId).val(netAmount);
-                            }
-                        }
+
+                        // $(unitTableId).val(data.data.unit);
+                        // let rate = data.data.rate;
+                        // let unit = data.data.unit;
+                        // let qty = $(qtyTableId).val();
+                        // let discount = $(discTableId).val();
+                        // let unitPerRate = parseFloat(rate) / parseFloat(unit);
+                        // if (qty != '') {
+                        //     let netAmount = parseFloat(qty) * parseFloat(unitPerRate);
+                        //     $(netTableId).val(netAmount);
+                        //     if (discount != '') {
+                        //         let totalAmount = netAmount - (netAmount * parseFloat(discount) / 100);
+                        //         $(totalTableId).val(totalAmount);
+                        //     }else{
+                        //         $(totalTableId).val(netAmount);
+                        //     }
+                        // }
                     }
                 },
                 error: function(data) {
