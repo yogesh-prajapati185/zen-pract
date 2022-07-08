@@ -179,7 +179,7 @@
             let net_amount  =  $('#net_amount').val();
             let total_amount =  $('#total_amount').val();
             var selectval = '';
-            var html = '<tr><td><select class="form-control product-table" id="invoice-product-'+i+'" name="invoice['+ i +'][product_id]" data-id="'+i+'"><option value=""> Please select </option>';
+            var html = '<tr><td><select class="form-control product-table" id="invoice-product-'+i+'" name="invoice['+ i +'][product_id]" data-id="'+i+'">';
             <?php  foreach ($products as $product){ ?>
                 var prId = "{{ $product->product_id }}";
                 if(prId == product_id){
@@ -191,8 +191,8 @@
             <?php } ?>
                 html += `</select></td><td><input class="form-control" id="invoice-rate-`+i+`" name="invoice[`+ i +`][rate]" value="`+rate+`" readonly /></td>
                     <td><input class="form-control"  id="invoice-unit-`+i+`" name="invoice[`+ i +`][unit]" readonly value="`+unit+`" /></td>
-                    <td><input class="form-control qty-table" id="invoice-qty-`+i+`" name="invoice[`+ i +`][qty]" value="`+qty+`" /></td>
-                    <td><input class="form-control disc-table"  id="invoice-disc-`+i+`" name="invoice[`+ i +`][disc]" value="`+disc+`" /></td>
+                    <td><input class="form-control qty-disc" id="invoice-qty-`+i+`" name="invoice[`+ i +`][qty]" value="`+qty+`" data-id="`+i+`" /></td>
+                    <td><input class="form-control qty-disc"  id="invoice-disc-`+i+`" name="invoice[`+ i +`][disc]" value="`+disc+`" data-id="`+i+`" /></td>
                     <td><input class="form-control"  id="invoice-net-`+i+`" name="invoice[`+ i +`][net]" readonly value="`+net_amount+`" /></td>
                     <td><input class="form-control" id="invoice-total-`+i+`" name="invoice[`+ i +`][total]" readonly value="`+total_amount+`" /></td>
                     <td><button class="btn btn-danger form-control remove-invoice"> REMOVE </button> </td></tr>`;
