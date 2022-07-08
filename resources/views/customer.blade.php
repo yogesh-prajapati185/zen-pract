@@ -62,14 +62,15 @@
                 <div class="form-group row">
                     <label for="qty" class="col-sm-3 col-form-label">Qty</label>
                     <div class="col-sm-7">
-                        <input type="text" class="form-control" id="qty" name="qty" placeholder="qty" oninput="updateQty()">
+                        <input type="text" class="form-control" id="qty" name="qty" placeholder="qty"
+                            oninput="updateQty()">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="discount" class="col-sm-3 col-form-label">Discount (%)</label>
                     <div class="col-sm-7">
-                        <input type="text" class="form-control" id="discount" name="discount"
-                            placeholder="discount" oninput="updateQty()">
+                        <input type="text" class="form-control" id="discount" name="discount" placeholder="discount"
+                            oninput="updateQty()">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -98,28 +99,28 @@
 
     <div class="col-md-12">
         <form id="custInvoices" type="post">
-            <input  type="hidden" id="customer_name" name="customer_name" />
-        <table class="table table-hover table-responsive">
-            <thead>
-              <tr>
-                <th scope="col">Product</th>
-                <th scope="col">Rate</th>
-                <th scope="col">Unit</th>
-                <th scope="col">Qty</th>
-                <th scope="col">Disc(%)</th>
-                <th scope="col">Net Amt.</th>
-                <th scope="col">Total Amt.</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-                
-              
-            </tbody>
-          </table>
-          <div class="form-group text-center mt-3">
-            <button type="submit" id="saveDetail" class="btn btn-primary">Submit</button>
-        </div>
+            <input type="hidden" id="customer_name" name="customer_name" />
+            <table class="table table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Rate</th>
+                        <th scope="col">Unit</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Disc(%)</th>
+                        <th scope="col">Net Amt.</th>
+                        <th scope="col">Total Amt.</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                </tbody>
+            </table>
+            <div class="form-group text-center mt-3">
+                <button type="submit" id="saveDetail" class="btn btn-primary">Submit</button>
+            </div>
         </form>
     </div>
 
@@ -173,31 +174,39 @@
             $('#customer_name').val($('#customerName').val());
             let product_id = $('#product').val();
             let rate = $('#rate').val();
-            let unit =  $('#unit').val();
+            let unit = $('#unit').val();
             let qty = $('#qty').val();
             let disc = $('#discount').val();
-            let net_amount  =  $('#net_amount').val();
-            let total_amount =  $('#total_amount').val();
+            let net_amount = $('#net_amount').val();
+            let total_amount = $('#total_amount').val();
             var selectval = '';
-            var html = '<tr><td><select class="form-control product-table" id="invoice-product-'+i+'" name="invoice['+ i +'][product_id]" data-id="'+i+'">';
+            var html = '<tr><td><select class="form-control product-table" id="invoice-product-' + i +
+                '" name="invoice[' + i + '][product_id]" data-id="' + i + '">';
             <?php  foreach ($products as $product){ ?>
-                var prId = "{{ $product->product_id }}";
-                if(prId == product_id){
-                    selectval = 'selected';
-                }else{
-                    selectval = '';
-                }
-                html += `<option value="`+prId+`" `+selectval+`> {{ $product->product_name }} </option>`;
+            var prId = "{{ $product->product_id }}";
+            if (prId == product_id) {
+                selectval = 'selected';
+            } else {
+                selectval = '';
+            }
+            html += `<option value="` + prId + `" ` + selectval +
+                `> {{ $product->product_name }} </option>`;
             <?php } ?>
-                html += `</select></td><td><input class="form-control" id="invoice-rate-`+i+`" name="invoice[`+ i +`][rate]" value="`+rate+`" readonly /></td>
-                    <td><input class="form-control"  id="invoice-unit-`+i+`" name="invoice[`+ i +`][unit]" readonly value="`+unit+`" /></td>
-                    <td><input class="form-control qty-disc" id="invoice-qty-`+i+`" name="invoice[`+ i +`][qty]" value="`+qty+`" data-id="`+i+`" /></td>
-                    <td><input class="form-control qty-disc"  id="invoice-disc-`+i+`" name="invoice[`+ i +`][disc]" value="`+disc+`" data-id="`+i+`" /></td>
-                    <td><input class="form-control"  id="invoice-net-`+i+`" name="invoice[`+ i +`][net]" readonly value="`+net_amount+`" /></td>
-                    <td><input class="form-control" id="invoice-total-`+i+`" name="invoice[`+ i +`][total]" readonly value="`+total_amount+`" /></td>
+            html += `</select></td><td><input class="form-control" id="invoice-rate-` + i +
+                `" name="invoice[` + i + `][rate]" value="` + rate + `" readonly /></td>
+                    <td><input class="form-control"  id="invoice-unit-` + i + `" name="invoice[` + i +
+                `][unit]" readonly value="` + unit + `" /></td>
+                    <td><input class="form-control qty-disc" id="invoice-qty-` + i + `" name="invoice[` + i +
+                `][qty]" value="` + qty + `" data-id="` + i + `" /></td>
+                    <td><input class="form-control qty-disc"  id="invoice-disc-` + i + `" name="invoice[` + i +
+                `][disc]" value="` + disc + `" data-id="` + i + `" /></td>
+                    <td><input class="form-control"  id="invoice-net-` + i + `" name="invoice[` + i +
+                `][net]" readonly value="` + net_amount + `" /></td>
+                    <td><input class="form-control" id="invoice-total-` + i + `" name="invoice[` + i +
+                `][total]" readonly value="` + total_amount + `" /></td>
                     <td><button class="btn btn-danger form-control remove-invoice"> REMOVE </button> </td></tr>`;
             $('tbody').append(html);
-            
+
             i += 1;
         });
 
@@ -205,14 +214,14 @@
             $(this).parent('td').parent('tr').remove();
         });
 
-        $(document).on('change', '.product-table', function(){
+        $(document).on('change', '.product-table', function() {
             let id = $(this).data('id');
-            let rateTableId = '#invoice-rate-'+id;
-            let unitTableId = '#invoice-unit-'+id;
-            let qtyTableId = '#invoice-qty-'+id;
-            let discTableId = '#invoice-disc-'+id;
-            let netTableId = '#invoice-net-'+id;
-            let totalTableId = '#invoice-total-'+id;
+            let rateTableId = '#invoice-rate-' + id;
+            let unitTableId = '#invoice-unit-' + id;
+            let qtyTableId = '#invoice-qty-' + id;
+            let discTableId = '#invoice-disc-' + id;
+            let netTableId = '#invoice-net-' + id;
+            let totalTableId = '#invoice-total-' + id;
             let prodId = $(this).val();
             let ajaxurl = 'product/' + prodId;
             $.ajax({
@@ -235,9 +244,10 @@
                             let netAmount = parseFloat(qty) * parseFloat(unitPerRate);
                             $(netTableId).val(netAmount);
                             if (discount != '') {
-                                let totalAmount = netAmount - (netAmount * parseFloat(discount) / 100);
+                                let totalAmount = netAmount - (netAmount * parseFloat(
+                                    discount) / 100);
                                 $(totalTableId).val(totalAmount);
-                            }else{
+                            } else {
                                 $(totalTableId).val(netAmount);
                             }
                         }
@@ -248,43 +258,56 @@
                 }
             });
 
+
+        });
+
+        $(document).on('change', '.qty-disc', function() {
+            let id = $(this).data('id');
+            let rateTableId = '#invoice-rate-' + id;
+            let unitTableId = '#invoice-unit-' + id;
+            let qtyTableId = '#invoice-qty-' + id;
+            let discTableId = '#invoice-disc-' + id;
+            let netTableId = '#invoice-net-' + id;
+            let totalTableId = '#invoice-total-' + id;
+            
+            let rate = $(rateTableId).val();
+            let unit = $(unitTableId).val();
             
         });
 
         $('#custInvoices').submit(function(e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                var ajaxurl = "invoice/store";
-                $.ajax({
-                    type: "POST",
-                    url: ajaxurl,
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    },
-                    success: function(res) {
-                        if (res.status == 'success') {
-                            toastr.success(res.message);
-                        }
-                        if (res.status == 'error') {
-                            toastr.error(res.message);
-                        }
-                    },
-                    error: function(data) {
-                        toastr.error('Something went wrong, Please try again!');
+            e.preventDefault();
+            let formData = new FormData(this);
+            var ajaxurl = "invoice/store";
+            $.ajax({
+                type: "POST",
+                url: ajaxurl,
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    if (res.status == 'success') {
+                        toastr.success(res.message);
                     }
-                });
+                    if (res.status == 'error') {
+                        toastr.error(res.message);
+                    }
+                },
+                error: function(data) {
+                    toastr.error('Something went wrong, Please try again!');
+                }
             });
+        });
 
     });
 
-    function updateQty()
-    {
+    function updateQty() {
         let rate = $('#rate').val();
         let unit = $('#unit').val();
-        setAmount(rate,unit);
+        setAmount(rate, unit);
     }
 
     function setAmount(rate, unit) {
@@ -297,12 +320,11 @@
             if (discount != '') {
                 let totalAmount = netAmount - (netAmount * parseFloat(discount) / 100);
                 $('#total_amount').val(totalAmount);
-            }else{
+            } else {
                 $('#total_amount').val(netAmount);
             }
         }
     }
-
 </script>
 
 </html>
