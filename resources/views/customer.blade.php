@@ -179,7 +179,7 @@
             let net_amount  =  $('#net_amount').val();
             let total_amount =  $('#total_amount').val();
             var selectval = '';
-            var html = '<tr><td><select class="form-control product-table" id="invoice[`+ i +`][product_id]" name="invoice[`+ i +`][product_id]""><option value=""> Please select </option>';
+            var html = '<tr><td><select class="form-control product-table" id="invoice-product-'+i+'" name="invoice['+ i +'][product_id]" data-id="'+i+'"><option value=""> Please select </option>';
             <?php  foreach ($products as $product){ ?>
                 var prId = "{{ $product->product_id }}";
                 if(prId == product_id){
@@ -189,12 +189,12 @@
                 }
                 html += `<option value="`+prId+`" `+selectval+`> {{ $product->product_name }} </option>`;
             <?php } ?>
-                html += `</select></td><td><input class="form-control" id="invoice[`+ i +`][rate]" name="invoice[`+ i +`][rate]" value="`+rate+`" /></td>
-                    <td><input class="form-control"  id="invoice[`+ i +`][unit]" name="invoice[`+ i +`][unit]" readonly value="`+unit+`" /></td>
-                    <td><input class="form-control qty-table" id="invoice[`+ i +`][qty]" name="invoice[`+ i +`][qty]" value="`+qty+`" /></td>
-                    <td><input class="form-control disc-table"  id="invoice[`+ i +`][disc]" name="invoice[`+ i +`][disc]" value="`+disc+`" /></td>
-                    <td><input class="form-control"  id="invoice[`+ i +`][net]" name="invoice[`+ i +`][net]" readonly value="`+net_amount+`" /></td>
-                    <td><input class="form-control" id="invoice[`+ i +`][total]" name="invoice[`+ i +`][total]" readonly value="`+total_amount+`" /></td>
+                html += `</select></td><td><input class="form-control" id="invoice-rate-`+i+`" name="invoice[`+ i +`][rate]" value="`+rate+`" readonly /></td>
+                    <td><input class="form-control"  id="invoice-unit-`+i+`" name="invoice[`+ i +`][unit]" readonly value="`+unit+`" /></td>
+                    <td><input class="form-control qty-table" id="invoice-qty-`+i+`" name="invoice[`+ i +`][qty]" value="`+qty+`" /></td>
+                    <td><input class="form-control disc-table"  id="invoice-disc-`+i+`" name="invoice[`+ i +`][disc]" value="`+disc+`" /></td>
+                    <td><input class="form-control"  id="invoice-net-`+i+`" name="invoice[`+ i +`][net]" readonly value="`+net_amount+`" /></td>
+                    <td><input class="form-control" id="invoice-total-`+i+`" name="invoice[`+ i +`][total]" readonly value="`+total_amount+`" /></td>
                     <td><button class="btn btn-danger form-control remove-invoice"> REMOVE </button> </td></tr>`;
             $('tbody').append(html);
             
@@ -206,13 +206,13 @@
         });
 
         $(document).on('change', '.product-table', function(){
-            let prodTableId = '#'+$(this).attr('id');
-            let rateTableId = prodTableId.replace('product_id','rate');
-            let unitTableId = prodTableId.replace('product_id','unit');
-            let qtyTableId = prodTableId.replace('product_id','qty');
-            let discTableId = prodTableId.replace('product_id','disc');
-            let netTableId = prodTableId.replace('product_id','net');
-            let totalTableId = prodTableId.replace('product_id','total');
+            let id = $(this).data('id');
+            let rateTableId = '#invoice-rate-'+id;
+            let unitTableId = '#invoice-unit-'+id;
+            let qtyTableId = '#invoice-qty-'+id;
+            let discTableId = '#invoice-disc-'+id;
+            let netTableId = '#invoice-net-'+id;
+            let totalTableId = '#invoice-total-'+id;
             let prodId = $(this).val();
             let ajaxurl = 'product/' + prodId;
             $.ajax({
@@ -225,23 +225,22 @@
                 success: function(data) {
                     if (data.status == 'success') {
                         $(rateTableId).val(data.data.rate);
-
-                        // $(unitTableId).val(data.data.unit);
-                        // let rate = data.data.rate;
-                        // let unit = data.data.unit;
-                        // let qty = $(qtyTableId).val();
-                        // let discount = $(discTableId).val();
-                        // let unitPerRate = parseFloat(rate) / parseFloat(unit);
-                        // if (qty != '') {
-                        //     let netAmount = parseFloat(qty) * parseFloat(unitPerRate);
-                        //     $(netTableId).val(netAmount);
-                        //     if (discount != '') {
-                        //         let totalAmount = netAmount - (netAmount * parseFloat(discount) / 100);
-                        //         $(totalTableId).val(totalAmount);
-                        //     }else{
-                        //         $(totalTableId).val(netAmount);
-                        //     }
-                        // }
+                        $(unitTableId).val(data.data.unit);
+                        let rate = data.data.rate;
+                        let unit = data.data.unit;
+                        let qty = $(qtyTableId).val();
+                        let discount = $(discTableId).val();
+                        let unitPerRate = parseFloat(rate) / parseFloat(unit);
+                        if (qty != '') {
+                            let netAmount = parseFloat(qty) * parseFloat(unitPerRate);
+                            $(netTableId).val(netAmount);
+                            if (discount != '') {
+                                let totalAmount = netAmount - (netAmount * parseFloat(discount) / 100);
+                                $(totalTableId).val(totalAmount);
+                            }else{
+                                $(totalTableId).val(netAmount);
+                            }
+                        }
                     }
                 },
                 error: function(data) {
